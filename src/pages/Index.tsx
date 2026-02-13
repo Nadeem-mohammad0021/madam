@@ -397,7 +397,7 @@ const Index = () => {
 
             <button
               onClick={() => setShowEnvelope(true)}
-              className="secret-btn rounded-full font-bold text-primary-foreground px-4 xs:px-6 py-1.5 xs:py-2 text-sm xs:text-base w-full sm:w-auto"
+              className="secret-btn rounded-full font-bold text-primary-foreground px-3 py-1 text-xs xs:px-4 xs:py-1.5 xs:text-sm w-auto sm:w-auto"
               style={{ background: "var(--gradient-yes)" }}
             >
               🔒 Secret Message
@@ -444,12 +444,12 @@ const Index = () => {
             </div>
           )}
 
-          <div className="flex flex-col xs:flex-row items-center justify-center gap-2 xs:gap-3 mt-3 xs:mt-4">
-            <div className="relative w-full xs:w-auto">
-              <span className="pulse-ring" />
+          <div className="flex flex-row items-center justify-center gap-1.5 xs:gap-3 mt-3 xs:mt-4">
+            <div className="relative">
+              <span className="pulse-ring scale-75 xs:scale-100" />
               <button
                 onClick={() => setAccepted(true)}
-                className="relative rounded-full font-bold text-primary-foreground btn-glow px-4 xs:px-6 py-1.5 xs:py-2 text-sm xs:text-base w-full xs:w-auto z-10"
+                className="relative rounded-full font-bold text-primary-foreground btn-glow px-2 py-0.5 text-xs xs:px-5 xs:py-1.5 xs:text-sm z-10"
                 style={{ background: "var(--gradient-yes)" }}
               >
                 Yes! 💕
@@ -458,7 +458,7 @@ const Index = () => {
             {!noHidden && (
               <button
                 onClick={handleNo}
-                className={`rounded-full font-bold transition-all duration-200 px-4 xs:px-6 py-1.5 xs:py-2 text-sm xs:text-base hover:opacity-80 active:scale-95 w-full xs:w-auto ${
+                className={`rounded-full font-bold transition-all duration-200 px-2 py-0.5 text-xs xs:px-5 xs:py-1.5 xs:text-sm hover:opacity-80 active:scale-95 ${
                   noCount > 0 ? 'fixed' : ''
                 }`}
                 style={{

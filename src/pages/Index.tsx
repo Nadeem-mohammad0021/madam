@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 
 const noMessages = [
   "mlm maa aap no hi click karthe bolke 🤪",
@@ -312,11 +312,19 @@ const Index = () => {
   const [noPosition, setNoPosition] = useState<{ top?: string; left?: string }>({});
   const [showMessage, setShowMessage] = useState(false);
   const [showEnvelope, setShowEnvelope] = useState(false);
+  const isMobileRef = useRef(window.innerWidth < 475);
 
   const moveNoButton = useCallback(() => {
+    // More mobile-friendly positioning
+    const isMobile = isMobileRef.current;
+    const topRange = isMobile ? 40 : 60;
+    const leftRange = isMobile ? 30 : 60;
+    const minTop = isMobile ? 20 : 15;
+    const minLeft = isMobile ? 10 : 15;
+    
     setNoPosition({
-      top: `${Math.random() * 60 + 15}%`,
-      left: `${Math.random() * 60 + 15}%`,
+      top: `${Math.random() * topRange + minTop}%`,
+      left: `${Math.random() * leftRange + minLeft}%`,
     });
   }, []);
 
@@ -332,6 +340,21 @@ const Index = () => {
   };
 
   const noHidden = noCount >= 5;
+
+  // Handle window resize for mobile detection
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobile = window.innerWidth < 475;
+      isMobileRef.current = isMobile;
+      // Re-position No button if it's currently visible and fixed
+      if (noCount > 0 && noCount < 5) {
+        moveNoButton();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [noCount, moveNoButton]);
 
   if (showEnvelope) {
     return (
@@ -374,7 +397,7 @@ const Index = () => {
 
             <button
               onClick={() => setShowEnvelope(true)}
-              className="secret-btn rounded-full font-bold text-primary-foreground px-6 xs:px-8 py-2 xs:py-3 text-sm xs:text-base w-full sm:w-auto"
+              className="secret-btn rounded-full font-bold text-primary-foreground px-4 xs:px-6 py-1.5 xs:py-2 text-sm xs:text-base w-full sm:w-auto"
               style={{ background: "var(--gradient-yes)" }}
             >
               🔒 Secret Message
@@ -421,12 +444,12 @@ const Index = () => {
             </div>
           )}
 
-          <div className="flex flex-col xs:flex-row items-center justify-center gap-3 xs:gap-4 mt-4 xs:mt-6">
+          <div className="flex flex-col xs:flex-row items-center justify-center gap-2 xs:gap-3 mt-3 xs:mt-4">
             <div className="relative w-full xs:w-auto">
               <span className="pulse-ring" />
               <button
                 onClick={() => setAccepted(true)}
-                className="relative rounded-full font-bold text-primary-foreground btn-glow px-6 xs:px-8 py-2 xs:py-3 text-sm xs:text-base w-full xs:w-auto z-10"
+                className="relative rounded-full font-bold text-primary-foreground btn-glow px-4 xs:px-6 py-1.5 xs:py-2 text-sm xs:text-base w-full xs:w-auto z-10"
                 style={{ background: "var(--gradient-yes)" }}
               >
                 Yes! 💕
@@ -435,11 +458,13 @@ const Index = () => {
             {!noHidden && (
               <button
                 onClick={handleNo}
-                className="rounded-full font-bold transition-all duration-200 px-6 xs:px-8 py-2 xs:py-3 text-sm xs:text-base hover:opacity-80 active:scale-95 w-full xs:w-auto"
+                className={`rounded-full font-bold transition-all duration-200 px-4 xs:px-6 py-1.5 xs:py-2 text-sm xs:text-base hover:opacity-80 active:scale-95 w-full xs:w-auto ${
+                  noCount > 0 ? 'fixed' : ''
+                }`}
                 style={{
                   background: "var(--gradient-no)",
                   color: "hsl(var(--primary-foreground))",
-                  ...(noCount > 0 ? { position: "fixed", ...noPosition, zIndex: 50 } : {}),
+                  ...(noCount > 0 ? { ...noPosition, zIndex: 50 } : {}),
                 }}
               >
                 No 😢
